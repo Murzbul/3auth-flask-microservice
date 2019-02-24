@@ -1,2 +1,2 @@
 # 3auth-flask-microservice
-Authetication, Autherization and Accounting
+Authentication, Authorization and Accounting
