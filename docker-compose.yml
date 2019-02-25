@@ -1,0 +1,32 @@
+version: '3.6'
+
+services:
+
+  auth_api:
+     build:
+       context: ./
+       dockerfile: dev.Dockerfile
+     restart: always
+     volumes:
+       - ./:/opt/www/api
+     container_name: auth_api
+     links:
+       - auth_mysql
+     ports:
+       - 5001:5001
+
+  auth_mysql:
+    build:
+      context: src/services/dev/mysql/
+      dockerfile: mysql.Dockerfile
+    restart: always
+    container_name: auth_mysql
+    ports:
+      - 3313:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: auth
+      MYSQL_USER: auth
+      MYSQL_PASSWORD: auth
+    volumes:
+      - /data_container/mysql/trip/:/var/lib/mysql
