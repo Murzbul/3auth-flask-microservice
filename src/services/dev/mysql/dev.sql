@@ -30,6 +30,7 @@ CREATE TABLE IF NOT EXISTS `auth`.`actions` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(100) CHARACTER SET 'utf8' NOT NULL,
   `refer_action` VARCHAR(150) NOT NULL COMMENT 'Refer action like a url',
+  `enabled` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '0 (visible), 1 (invisible) ',
   `created` DATETIME NOT NULL,
   `updated` DATETIME NOT NULL,
   PRIMARY KEY (`id`),
@@ -48,6 +49,7 @@ DROP TABLE IF EXISTS `auth`.`roles` ;
 CREATE TABLE IF NOT EXISTS `auth`.`roles` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) CHARACTER SET 'utf8' NOT NULL,
+  `canonnical_name` VARCHAR(50) CHARACTER SET 'utf8' NOT NULL,
   `description` VARCHAR(500) CHARACTER SET 'utf8' NULL DEFAULT NULL,
   `enabled` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '0 (visible), 1 (invisible) ',
   `created` DATETIME NOT NULL,
@@ -66,18 +68,18 @@ COLLATE = utf8_unicode_ci;
 DROP TABLE IF EXISTS `auth`.`roles_has_actions` ;
 
 CREATE TABLE IF NOT EXISTS `auth`.`roles_has_actions` (
-  `roles_id` INT(10) UNSIGNED NOT NULL,
-  `actions_id` INT(10) UNSIGNED NOT NULL,
+  `role_id` INT(10) UNSIGNED NOT NULL,
+  `action_id` INT(10) UNSIGNED NOT NULL,
   PRIMARY KEY (`roles_id`, `actions_id`),
   INDEX `fk_roles_has_actions_actions1_idx` (`actions_id` ASC),
   INDEX `fk_roles_has_actions_roles1_idx` (`roles_id` ASC),
   CONSTRAINT `fk_roles_has_actions_actions1`
-    FOREIGN KEY (`actions_id`)
+    FOREIGN KEY (`action_id`)
     REFERENCES `auth`.`actions` (`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_roles_has_actions_roles1`
-    FOREIGN KEY (`roles_id`)
+    FOREIGN KEY (`role_id`)
     REFERENCES `auth`.`roles` (`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION)
@@ -118,18 +120,18 @@ COLLATE = utf8_unicode_ci;
 DROP TABLE IF EXISTS `auth`.`users_has_roles` ;
 
 CREATE TABLE IF NOT EXISTS `auth`.`users_has_roles` (
-  `users_id` INT(10) UNSIGNED NOT NULL,
-  `roles_id` INT(10) UNSIGNED NOT NULL,
+  `user_id` INT(10) UNSIGNED NOT NULL,
+  `role_id` INT(10) UNSIGNED NOT NULL,
   PRIMARY KEY (`users_id`, `roles_id`),
-  INDEX `fk_users_has_roles_roles1_idx` (`roles_id` ASC),
-  INDEX `fk_users_has_roles_users_idx` (`users_id` ASC),
+  INDEX `fk_users_has_roles_roles1_idx` (`role_id` ASC),
+  INDEX `fk_users_has_roles_users_idx` (`user_id` ASC),
   CONSTRAINT `users_has_roles_ibfk_1`
-    FOREIGN KEY (`roles_id`)
+    FOREIGN KEY (`role_id`)
     REFERENCES `auth`.`roles` (`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION,
   CONSTRAINT `users_has_roles_ibfk_2`
-    FOREIGN KEY (`users_id`)
+    FOREIGN KEY (`user_id`)
     REFERENCES `auth`.`users` (`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION)
@@ -143,9 +145,9 @@ COLLATE = utf8_unicode_ci;
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `auth`.`session` ;
 
-CREATE TABLE IF NOT EXISTS `auth`.`session` (
+CREATE TABLE IF NOT EXISTS `auth`.`sessions` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `token` VARCHAR(100) NOT NULL,
+  `token` VARCHAR(612) NOT NULL,
   `last_login` DATETIME NOT NULL,
   `expired` DATETIME NOT NULL,
   `created` DATETIME NOT NULL,

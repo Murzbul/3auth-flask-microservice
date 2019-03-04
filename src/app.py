@@ -8,15 +8,19 @@ from flask_jwt_extended import (
     get_jwt_identity, get_jwt_claims
 )
 
-from config.config import dictConfig, string_config
+from config.config import dictConfig, string_config_db
 
-from resources.user import UserResource
+from resources.user import UserResource, UserIdResource, UserListResource
 from resources.session import SessionResource
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = string_config
+app.config['SQLALCHEMY_DATABASE_URI'] = string_config_db
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_POOL_SIZE'] = 20
+app.config['SQLALCHEMY_POOL_TIMEOUT'] = 5
+app.config['SQLALCHEMY_POOL_RECYCLE'] = 1500
 app.config['PROPAGATE_EXCEPTIONS'] = True
 app.secret_key = 'jwt-secret-string'
 app.config['JWT_SECRET_KEY'] = 'jwt-secret-string'
@@ -26,23 +30,10 @@ api = Api(app)
 jwt = JWTManager(app)
 
 api.add_resource(UserResource, '/user')
-api.add_resource(SessionResource, '/session')
+api.add_resource(UserIdResource, '/user/<int:id>')
+api.add_resource(UserListResource, '/users')
 
-# Protect a view with jwt_required, which requires a valid access token
-# in the request to access.
-# @app.route('/protected', methods=['GET'])
-# @jwt_required
-# def protected():
-#     # Access the identity of the current user with get_jwt_identity
-#
-#     # current_user = get_jwt_identity()
-#     # return jsonify(logged_in_as=current_user), 200
-#
-#     claims = get_jwt_claims()
-#     return jsonify({
-#         'hello_is': claims['hello'],
-#         'foo_is': claims['foo']
-#     }), 200ç¡''
+api.add_resource(SessionResource, '/session')
 
 if __name__ == '__main__':
     from db import db
