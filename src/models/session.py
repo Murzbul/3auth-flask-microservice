@@ -16,6 +16,9 @@ class Session(db.Model):
         self.last_login = last_login
         self.expired = expired
 
+    def __repr__(self):
+            return f'<Session {self.email}>'
+
     @classmethod
     def find_by_token(cls, token):
         return cls.query.filter_by(token=token).first()

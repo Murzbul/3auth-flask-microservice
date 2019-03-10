@@ -13,6 +13,7 @@ from config.config import dictConfig, string_config_db
 from resources.user import UserResource, UserIdResource, UserListResource
 from resources.role import RoleResource, RoleIdResource, RoleListResource
 from resources.action import ActionResource, ActionIdResource, ActionListResource
+from resources.assign import AssignActionToRoleResource, AssignRoleToUserResource
 from resources.session import SessionResource
 
 app = Flask(__name__)
@@ -44,6 +45,9 @@ api.add_resource(RoleListResource, '/roles')
 api.add_resource(ActionResource, '/action')
 api.add_resource(ActionIdResource, '/action/<int:id>')
 api.add_resource(ActionListResource, '/actions')
+
+api.add_resource(AssignActionToRoleResource, '/assign_action_role')
+api.add_resource(AssignRoleToUserResource, '/assign_role_user')
 
 if __name__ == '__main__':
     from db import db

@@ -11,6 +11,7 @@ from validators.role import RoleValidator
 from validators.role_update import RoleUpdateValidator
 from helpers.messages.role_message import RoleMessage
 
+
 class RoleResource(Resource):
 
     @jwt_required

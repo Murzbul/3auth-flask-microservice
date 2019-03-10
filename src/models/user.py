@@ -29,6 +29,9 @@ class User(db.Model):
         self.date_of_birth = date_of_birth
         self.enabled = 1
 
+    def __repr__(self):
+            return f'<User {self.email}>'
+
     @classmethod
     def find_by_email(cls, email):
         return cls.query.filter_by(email=email).first()
