@@ -7,8 +7,8 @@ class Action(db.Model):
     name = db.Column(db.String(100), nullable=False, unique=True)
     refer_action = db.Column(db.String(255), nullable=False)
     enabled = db.Column(db.Boolean())
-    created = db.Column(db.DateTime, nullable=False)
-    updated = db.Column(db.DateTime, nullable=False)
+    created = db.Column(db.DateTime, default=datetime.datetime.utcnow, nullable=False)
+    updated = db.Column(db.DateTime, default=datetime.datetime.utcnow, nullable=False)
 
     def __init__(self, name, refer_action):
         self.name = name
@@ -29,4 +29,13 @@ class Action(db.Model):
 
     def save(self):
         db.session.add(self)
+        db.session.commit()
+        
+    def update(self):
+        self.updated = datetime.datetime.now()
+        db.session.add(self)
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
         db.session.commit()

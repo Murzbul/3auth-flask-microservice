@@ -6,7 +6,7 @@ class Role(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(45), nullable=False, unique=True)
     cannonical_name = db.Column(db.String(45), nullable=False, unique=True)
-    description = db.Column(db.String(500), nullable=False)
+    description = db.Column(db.String(500), nullable=True)
     enabled = db.Column(db.Boolean())
     created = db.Column(db.DateTime, default=datetime.datetime.utcnow, nullable=False)
     updated = db.Column(db.DateTime, default=datetime.datetime.utcnow, nullable=False)
@@ -18,10 +18,6 @@ class Role(db.Model):
         self.enabled = 1
 
     @classmethod
-    def find_by_name(cls, email):
-        return cls.query.filter_by(email=email).first()
-
-    @classmethod
     def find_by_cannonical_name(cls, cannonical_name):
         return cls.query.filter_by(cannonical_name=cannonical_name).first()
 
@@ -31,4 +27,13 @@ class Role(db.Model):
 
     def save(self):
         db.session.add(self)
+        db.session.commit()
+
+    def update(self):
+        self.updated = datetime.datetime.now()
+        db.session.add(self)
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
         db.session.commit()

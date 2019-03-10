@@ -11,6 +11,8 @@ from flask_jwt_extended import (
 from config.config import dictConfig, string_config_db
 
 from resources.user import UserResource, UserIdResource, UserListResource
+from resources.role import RoleResource, RoleIdResource, RoleListResource
+from resources.action import ActionResource, ActionIdResource, ActionListResource
 from resources.session import SessionResource
 
 app = Flask(__name__)
@@ -29,11 +31,19 @@ api = Api(app)
 
 jwt = JWTManager(app)
 
+api.add_resource(SessionResource, '/session')
+
 api.add_resource(UserResource, '/user')
 api.add_resource(UserIdResource, '/user/<int:id>')
 api.add_resource(UserListResource, '/users')
 
-api.add_resource(SessionResource, '/session')
+api.add_resource(RoleResource, '/role')
+api.add_resource(RoleIdResource, '/role/<int:id>')
+api.add_resource(RoleListResource, '/roles')
+
+api.add_resource(ActionResource, '/action')
+api.add_resource(ActionIdResource, '/action/<int:id>')
+api.add_resource(ActionListResource, '/actions')
 
 if __name__ == '__main__':
     from db import db

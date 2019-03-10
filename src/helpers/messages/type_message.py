@@ -50,7 +50,7 @@ class TypeMessage404(AbstractTypeMessage):
         return abort(404, self.message.errors)
 
 class TypeMessage500(AbstractTypeMessage):
-    """docstring for TypeMessage401."""
+    """docstring for TypeMessage500."""
     def __init__(self, message):
         self.message = message
 
@@ -79,6 +79,6 @@ class FactoryTypeMessage(object):
             typeMessage = TypeMessage404(message)
 
         elif message.statusCode == 500:
-            typeMessage = TypeMessage401(message)
+            typeMessage = TypeMessage500(message)
 
         return typeMessage

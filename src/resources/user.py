@@ -4,12 +4,15 @@ import datetime
 
 from flask_jwt_extended import ( jwt_required, get_jwt_identity  )
 from flask_restful import Resource
-from flask import request
+from flask import request, Flask
 
 from models.user import User
+
 from validators.user import UserValidator
 from validators.user_update import UserUpdateValidator
+
 from helpers.messages.user_message import UserMessage
+from helpers.decorators.authenticate import Authenticate
 
 class UserResource(Resource):
 
@@ -53,6 +56,9 @@ class UserIdResource(Resource):
 
     @jwt_required
     def get(self, id):
+        # For filter and pagination functionality
+        # searchword = request.args.get('id', '')
+
         userMessage = UserMessage()
 
         user = User.find_by_id(id)
@@ -74,8 +80,6 @@ class UserIdResource(Resource):
 
         validator = UserUpdateValidator()
         success = validator.validate(request.json)
-
-        logging.info(request.json)
 
         if not success:
             userMessage.errors = validator.errors
@@ -164,5 +168,4 @@ class UserListResource(Resource):
         userMessage.update_list(users)
         userMessage.statusCode = 200
         userMessage.success = True
-
         return userMessage.send()
