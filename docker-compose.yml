@@ -29,4 +29,4 @@ services:
       MYSQL_USER: auth
       MYSQL_PASSWORD: auth
     volumes:
-      - /data_container/mysql/trip/:/var/lib/mysql
+      - /data_container/mysql/auth/:/var/lib/mysql
